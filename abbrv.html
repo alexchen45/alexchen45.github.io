@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abbreviation Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    .input-box {
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      width: 300px;
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .submit-btn {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .submit-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .abbreviation {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <input type="text" class="input-box" id="sentenceInput" placeholder="Enter a sentence...">
+    <button class="submit-btn" onclick="generateAbbreviation()">Generate Abbreviation</button>
+    <p class="abbreviation" id="abbreviationOutput"></p>
+  </div>
+
+  <script>
+    function generateAbbreviation() {
+      const inputSentence = document.getElementById('sentenceInput').value;
+      const words = inputSentence.split(' ');
+      let abbreviation = '';
+      words.forEach(word => {
+        if (word.length > 0) {
+          abbreviation += word[0].toUpperCase();
+        }
+      });
+      document.getElementById('abbreviationOutput').innerText = abbreviation;
+    }
+  </script>
+</body>
+</html>
