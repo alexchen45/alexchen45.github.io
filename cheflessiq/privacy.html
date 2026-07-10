@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chefless IQ Privacy Policy</title>
+  <meta name="description" content="Privacy Policy for Chefless IQ." />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #09090b;
+      --panel: #111114;
+      --panel-2: #17171b;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --subtle: #71717a;
+      --line: rgba(255, 255, 255, 0.09);
+      --yellow: #ffad1f;
+      --green: #32d74b;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(255, 173, 31, 0.16), transparent 30rem),
+        radial-gradient(circle at 84% 8%, rgba(50, 215, 75, 0.08), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.62;
+    }
+
+    main {
+      width: min(840px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 52px 0 72px;
+    }
+
+    .letterhead {
+      display: grid;
+      grid-template-columns: 128px 1fr;
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 28px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018)), var(--panel);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.36);
+      overflow: hidden;
+    }
+
+    .probe-mark {
+      height: 154px;
+      width: 128px;
+      object-fit: contain;
+      object-position: center;
+      filter: drop-shadow(0 14px 24px rgba(255, 173, 31, 0.16));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 10px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 173, 31, 0.28);
+      background: rgba(255, 173, 31, 0.08);
+      color: var(--yellow);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 7vw, 58px);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .updated {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .card {
+      margin-top: 16px;
+      padding: 24px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.014)), var(--panel);
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 21px;
+      line-height: 1.2;
+      letter-spacing: -0.025em;
+    }
+
+    p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    strong { color: var(--text); }
+
+    ul {
+      margin: 8px 0 0;
+      padding-left: 22px;
+      color: var(--muted);
+    }
+
+    li { margin: 8px 0; }
+
+    a {
+      color: var(--yellow);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .summary {
+      border-color: rgba(255, 173, 31, 0.28);
+      background: linear-gradient(180deg, rgba(255,173,31,0.09), rgba(255,255,255,0.014)), var(--panel);
+    }
+
+    .summary p {
+      color: #f6d9a5;
+      font-size: 17px;
+    }
+
+    footer {
+      margin-top: 24px;
+      color: var(--subtle);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 620px) {
+      main { padding-top: 24px; }
+
+      .letterhead {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .probe-mark {
+        margin: 0 auto;
+        height: 128px;
+      }
+
+      .eyebrow { margin-left: auto; margin-right: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="letterhead">
+      <img class="probe-mark" src="./ChefIQProbe.svg" alt="Illustration of two wireless thermometer probes" />
+      <div>
+        <div class="eyebrow">Chefless IQ</div>
+        <h1>Privacy Policy</h1>
+        <p class="updated">Last updated: July 10, 2026</p>
+      </div>
+    </header>
+
+    <section class="card summary">
+      <p>
+        <strong>Short version:</strong> Chefless IQ does not collect, sell, transmit,
+        or share personal data. Probe information and app preferences stay on your device.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Information we collect</h2>
+      <p>
+        Chefless IQ does not collect personal information, analytics, advertising identifiers,
+        account information, location data, or contact information.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Bluetooth and probe data</h2>
+      <p>
+        Chefless IQ uses Bluetooth to detect nearby compatible CQ60 wireless thermometer probe
+        broadcasts and display temperature, battery, and signal information locally on your device.
+      </p>
+      <p>
+        This Bluetooth information is used only to power the live dashboard. It is not sent to
+        our servers or shared with third parties.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Local app data</h2>
+      <p>The app may store the following information locally on your device:</p>
+      <ul>
+        <li>Probe names and color labels</li>
+        <li>Temperature unit preference, such as Fahrenheit or Celsius</li>
+        <li>Onboarding completion state</li>
+        <li>Recent temperature graph history while the app is in use</li>
+      </ul>
+      <p>
+        This information is stored locally for app functionality and is not transmitted to us.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Third-party services</h2>
+      <p>
+        Chefless IQ does not include third-party analytics, advertising SDKs, tracking SDKs,
+        or crash-reporting SDKs.
+      </p>
+      <p>
+        If users choose to share diagnostics with app developers through Apple’s system settings,
+        Apple may provide crash reports through Apple developer tools. Those reports are governed
+        by Apple’s diagnostics and privacy controls.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Children’s privacy</h2>
+      <p>
+        Chefless IQ is not directed to children and does not knowingly collect personal information
+        from children.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Changes to this policy</h2>
+      <p>
+        If Chefless IQ changes in a way that affects privacy, this policy will be updated before
+        or alongside the app update.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Contact</h2>
+      <p>
+        For privacy questions, contact:
+        <a href="mailto:alexchen45@gmail.com">alexchen45@gmail.com</a>
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Independent app notice</h2>
+      <p>
+        Chefless IQ is a third-party app and is not affiliated with, sponsored by, or endorsed by
+        CHEF iQ. CHEF iQ and CQ60 are referenced only to describe hardware compatibility.
+      </p>
+    </section>
+
+    <footer>
+      Chefless IQ · Privacy Policy
+    </footer>
+  </main>
+</body>
+</html>
