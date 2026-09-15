@@ -94,7 +94,6 @@ kbd { display: inline-flex; align-items: center; justify-content: center; min-wi
 .title { margin: 0; font-size: 16px; line-height: 24px; font-weight: 600; letter-spacing: -0.32px; white-space: nowrap; }
 .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 #settings-btn[aria-expanded="true"] { background: var(--ga-200); box-shadow: 0 0 0 1px var(--ga-500); }
-#new-session-btn { gap: 0; }
 
 /* High Quality: a bulb that lights up */
 .hq { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px 0 10px; border: 0; border-radius: 6px; background: var(--bg-100); box-shadow: 0 0 0 1px var(--ga-400); color: var(--gray-900);
