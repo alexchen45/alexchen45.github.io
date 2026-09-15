@@ -157,13 +157,13 @@ details[open] .chev { transform: rotate(45deg); }
 .notes { display: flex; flex-direction: column; gap: 8px; align-items: center; padding: 0 24px; overflow-y: auto; scrollbar-gutter: stable both-edges; scrollbar-width: thin; }   /* same (thin) gutters as the feed so notes and cards line up */
 .notes:not(:empty) { padding: 16px 24px 12px; }
 .notes { position: relative; }
-.note { display: flex; gap: 12px; align-items: center; width: 100%; max-width: 960px; min-height: 44px; padding: 6px 6px 6px 14px; border: 1px solid var(--ga-400); border-radius: 6px; background: var(--bg-100); color: var(--gray-900); box-shadow: var(--shadow-menu); }
+.note { display: flex; gap: 12px; align-items: center; width: 100%; max-width: 960px; min-height: 44px; padding: 6px 6px 6px 14px; border: 1px solid var(--ga-400); border-radius: 6px; background: var(--bg-100); color: var(--gray-900); }
 .note strong { font-weight: 500; color: var(--gray-1000); white-space: nowrap; flex: none; }
 .note > span:not(.note-icon) { flex: 1; min-width: 0; }
 .note-icon { flex: none; display: flex; }
 .note-warning .note-icon { color: var(--amber-900); }
 .note-error .note-icon { color: var(--red-900); }
-.note.leaving { position: absolute; left: 0; top: 0; pointer-events: none; }
+.note.leaving { pointer-events: none; }
 .note .dismiss { color: inherit; background: transparent; box-shadow: none; opacity: .75; }
 .note .dismiss:hover { background: color-mix(in srgb, currentColor 12%, transparent); box-shadow: none; opacity: 1; }
 .note .dismiss:focus-visible { box-shadow: var(--focus-ring); }
@@ -466,7 +466,10 @@ input[type=number]:hover::-webkit-inner-spin-button, input[type=number]:focus::-
 .cb-new { position: absolute; left: calc(100% + 12px); top: 8px; height: 40px; padding: 0 14px; white-space: nowrap; box-shadow: var(--shadow-menu); }
 .cb-new:hover { box-shadow: var(--shadow-menu); }
 .empty .btn.btn-start.rest-start.running { box-shadow: 0 0 0 1px var(--ga-400); }
-.app.resting .controlbar { display: none; }
+.controlbar { transition: opacity 180ms ease-out, visibility 0s linear 0s; }
+.app.resting .controlbar { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 180ms ease-out, visibility 0s linear 180ms; }
+@keyframes rt-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.rest-controls { animation: rt-fade-in 220ms ease-out; }
 @media (prefers-reduced-motion: reduce) { .main { transition: none; } }
 .app.resting .feed { padding-bottom: 24px; }
 @media (max-width: 900px) {

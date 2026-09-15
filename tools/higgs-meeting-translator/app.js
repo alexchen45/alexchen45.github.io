@@ -225,6 +225,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
   // Only the most useful alert is shown; the rest wait their turn (a cause before its consequence).
   const NOTE_PRIORITY = ["conn", "key", "err-mic", "err-system", "micperm", "share", "sig-mic", "nosrc"];
   const noteRank = (key) => { const i = NOTE_PRIORITY.indexOf(key); return i < 0 ? NOTE_PRIORITY.length : i; };
+  let notesSwap = 0;
   function renderNotes() {
     const sig = [...notes].map(([k, n]) => k + n.kind + n.title + n.body).join("|");
     if (sig === notesSig) return;
@@ -233,13 +234,16 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     const top = [...notes].sort((a, b) => noteRank(a[0]) - noteRank(b[0])).slice(0, 1);
     const nextSig = top.map(([k, n]) => k + n.kind + n.title + n.body).join("|");
     const motion = !matchMedia("(prefers-reduced-motion: reduce)").matches;
-    for (const old of [...box.children]) {
-      if (old.dataset.sig === nextSig && !old.classList.contains("leaving")) return;   // same alert still on top: leave it alone
-      if (old.classList.contains("leaving")) continue;
-      old.classList.add("leaving");
-      if (motion) old.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: "ease-out" }).onfinish = () => old.remove();
-      else old.remove();
+    const cur = box.firstElementChild;
+    if (cur && cur.dataset.sig === nextSig && !cur.classList.contains("leaving")) return;   // same alert still on top
+    if (cur && !cur.classList.contains("leaving") && motion) {
+      // the old alert fades out first; the new one (if any) appears once it is gone
+      cur.classList.add("leaving");
+      const token = ++notesSwap;
+      cur.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, easing: "ease-out" }).onfinish = () => { cur.remove(); if (token === notesSwap) { notesSig = null; renderNotes(); } };
+      return;
     }
+    box.innerHTML = "";
     for (const [key, n] of top) {
       const el = document.createElement("div");
       el.className = "note note-" + n.kind;
@@ -553,39 +557,9 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     updateEmpty();
     if (focusStart) ($("rest-start") || $("start-btn")).focus();
   }
-  // Where the capture controls currently are: in the resting card or in the floating bar.
-  function controlSpots() {
-    const rest = $("rest-controls"), bar = document.querySelector(".controlbar");
-    const vis = (el) => el && el.getClientRects().length > 0;
-    const spot = (mode, els) => {   // everything is measured now: the buttons change look and size right after
-      const out = { mode, rects: {}, looks: {}, els };
-      for (const k in els) { const el = els[k]; if (!el) continue; const cs = getComputedStyle(el);
-        out.rects[k] = el.getBoundingClientRect();
-        out.looks[k] = { text: el.textContent.trim(), bg: cs.backgroundColor, color: cs.color, radius: cs.borderRadius, shadow: cs.boxShadow }; }
-      return out;
-    };
-    if (rest && !rest.hidden && vis($("rest-start"))) return spot("rest", { start: $("rest-start"), mic: $("tile-mic"), system: $("tile-system") });
-    if (vis($("start-btn"))) return spot("bar", { start: $("start-btn"), mic: $("src-mic"), system: $("src-system") });
-    return null;
-  }
-  // The controls move: each real button in its new home starts out where (and as big as) it was in the old
-  // one and settles into place, with its contents fading in once the shape is close (FLIP).
-  function flyControls(from, to) {
-    if (!from || !to || from.mode === to.mode || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const easing = "cubic-bezier(.2,.7,.2,1)", duration = 360;
-    for (const name of ["start", "mic", "system"]) {
-      const el = to.els[name], r0 = from.rects[name], r1 = to.rects[name];   // r0 was measured before the layout changed
-      if (!el || !r0 || !r1 || !r0.width || !r1.width) continue;
-      const dx = r0.left - r1.left, dy = r0.top - r1.top, sx = r0.width / r1.width, sy = r0.height / r1.height;
-      el.animate([{ transformOrigin: "0 0", transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
-                  { transformOrigin: "0 0", transform: "none" }], { duration, easing });
-      for (const child of el.children) child.animate([{ opacity: 0 }, { opacity: 0, offset: 0.55 }, { opacity: 1 }], { duration, easing: "ease-out" });
-    }
-  }
   function updateEmpty() {
     let empty = $("empty");
     const appEl = document.querySelector(".app");
-    const spotsBefore = (!viewer && state && $("empty")) ? controlSpots() : null;   // only when the controls change home
     if (segs.size === 0 && needsOnboarding()) { renderOnboarding(); const dl0 = $("download-btn"); if (dl0) dl0.disabled = true; appEl.classList.toggle("resting", !viewer); return; }
     if (empty && empty.classList.contains("onboarding")) { empty.remove(); empty = null; }
     if (segs.size === 0) {
@@ -629,7 +603,6 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
       renderRest();
     } else if (empty) empty.remove();
     appEl.classList.toggle("resting", !!$("empty") && !viewer && !(state && state.running) && !isStarting());
-    if (spotsBefore) flyControls(spotsBefore, controlSpots());
     const dl = $("download-btn"); if (dl) dl.disabled = segs.size === 0;
     document.title = segs.size ? `Higgs Meeting Translator · ${cards.size} card${cards.size === 1 ? "" : "s"}` : "Higgs Meeting Translator";
   }
