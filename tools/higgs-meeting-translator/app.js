@@ -230,16 +230,30 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     if (sig === notesSig) return;
     notesSig = sig;
     const box = $("notes");
-    box.innerHTML = "";
     const top = [...notes].sort((a, b) => noteRank(a[0]) - noteRank(b[0])).slice(0, 1);
+    const nextSig = top.map(([k, n]) => k + n.kind + n.title + n.body).join("|");
+    const motion = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    for (const old of [...box.children]) {
+      if (old.dataset.sig === nextSig && !old.classList.contains("leaving")) return;   // same alert still on top: leave it alone
+      if (old.classList.contains("leaving")) continue;
+      old.classList.add("leaving");
+      if (motion) old.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: "ease-out" }).onfinish = () => old.remove();
+      else old.remove();
+    }
     for (const [key, n] of top) {
       const el = document.createElement("div");
       el.className = "note note-" + n.kind;
+      el.dataset.sig = nextSig;
       el.setAttribute("role", "status");
+      const icon = document.createElement("span"); icon.className = "note-icon"; icon.setAttribute("aria-hidden", "true");
+      icon.innerHTML = n.kind === "error"
+        ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></svg>'
+        : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5 2.8 19.5h18.4z"/><path d="M12 9.5v4.5M12 17h.01"/></svg>';
       const strong = document.createElement("strong"); strong.textContent = n.title + " ";
       const span = document.createElement("span"); span.textContent = n.body;
-      el.append(strong, span);
-      if (n.action) { const b = document.createElement("button"); b.className = "btn btn-secondary btn-sm"; b.textContent = n.action.label; b.onclick = n.action.run; el.appendChild(b); }
+      el.append(icon, strong, span);
+      if (n.action) { const b = document.createElement("button"); b.className = "btn btn-sm"; b.textContent = n.action.label; b.onclick = n.action.run; el.appendChild(b); }
+      if (motion) el.animate([{ opacity: 0, transform: "translateY(-4px)" }, { opacity: 1, transform: "none" }], { duration: 180, easing: "ease-out" });
       if (!["key", "conn", "nosrc"].includes(key)) {
         const x = document.createElement("button"); x.className = "btn btn-tertiary btn-sq btn-sm dismiss"; x.setAttribute("aria-label", "Dismiss"); x.textContent = "×";
         x.onclick = () => { notes.delete(key); dismissed.add(key + "|" + n.body); renderNotes(); };
@@ -551,27 +565,21 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
       return out;
     };
     if (rest && !rest.hidden && vis($("rest-start"))) return spot("rest", { start: $("rest-start"), mic: $("tile-mic"), system: $("tile-system") });
-    if (vis($("start-btn"))) return spot("bar", { start: $("start-btn"), mic: $("en-mic"), system: $("en-system") });
+    if (vis($("start-btn"))) return spot("bar", { start: $("start-btn"), mic: $("src-mic"), system: $("src-system") });
     return null;
   }
-  // A short "the buttons move there" animation when the controls change home.
+  // The controls move: each real button in its new home starts out where (and as big as) it was in the old
+  // one and settles into place, with its contents fading in once the shape is close (FLIP).
   function flyControls(from, to) {
     if (!from || !to || from.mode === to.mode || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const easing = "cubic-bezier(.2,.7,.2,1)", duration = 360;
     for (const name of ["start", "mic", "system"]) {
-      const a = from.els[name], b = to.els[name]; if (!a || !b) continue;
-      const r0 = from.rects[name], r1 = to.rects[name];   // "from" was measured before the layout changed
-      if (!r0 || !r1 || !r0.width || !r1.width) continue;
-      const look = from.looks[name], g = document.createElement("div");
-      g.className = "fly-ghost";
-      g.style.cssText = `left:${r0.left}px;top:${r0.top}px;width:${r0.width}px;height:${r0.height}px;background:${look.bg};color:${look.color};border-radius:${look.radius};box-shadow:${look.shadow}`;
-      if (name === "start") g.textContent = look.text;
-      document.body.appendChild(g);
-      const anim = g.animate([
-        { transform: "translate(0,0)", width: r0.width + "px", height: r0.height + "px", opacity: 1 },
-        { transform: `translate(${r1.left - r0.left}px,${r1.top - r0.top}px)`, width: r1.width + "px", height: r1.height + "px", opacity: 0.15 },
-      ], { duration: 340, easing: "cubic-bezier(.2,.7,.2,1)", fill: "forwards" });
-      anim.onfinish = () => g.remove();
-      setTimeout(() => g.remove(), 600);
+      const el = to.els[name], r0 = from.rects[name], r1 = to.rects[name];   // r0 was measured before the layout changed
+      if (!el || !r0 || !r1 || !r0.width || !r1.width) continue;
+      const dx = r0.left - r1.left, dy = r0.top - r1.top, sx = r0.width / r1.width, sy = r0.height / r1.height;
+      el.animate([{ transformOrigin: "0 0", transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
+                  { transformOrigin: "0 0", transform: "none" }], { duration, easing });
+      for (const child of el.children) child.animate([{ opacity: 0 }, { opacity: 0, offset: 0.55 }, { opacity: 1 }], { duration, easing: "ease-out" });
     }
   }
   function updateEmpty() {
