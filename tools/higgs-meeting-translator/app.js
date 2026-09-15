@@ -113,7 +113,8 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     const p = prefs.get();
     engine.send({ type: "config", target_language: p.target_language, source_hint: p.source_hint || "", hq: p.hq !== false,
                   speaker_notes: p.speaker_notes || "", group_gap_s: p.group_gap_s, segmenter: p.segmenter,
-                  enabled: p.enabled && (p.enabled.mic || p.enabled.system) ? p.enabled : { mic: false, system: true } });
+                  enabled: !(cap && cap.systemAudioSupported()) ? { mic: true, system: false }   // Safari, Firefox, phones: microphone only
+                         : p.enabled && (p.enabled.mic || p.enabled.system) ? p.enabled : { mic: false, system: true } });
     setConnected(true);
     handle(engine.snapshot());
     renderSessions();
@@ -124,6 +125,9 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
 
   // ------------------------------------------------------- browser capture
   const cap = window.RTCapture;
+  // Computer audio is possible when the native helper captures it, or when this browser can share system audio.
+  const sysAudioOk = () => !state || state.capture.system !== "browser" || !!(cap && cap.systemAudioSupported());
+  const NO_SYS_TEXT = "This browser can't share computer audio.";
   let micDeviceId = "";
   let systemArmed = false;      // user picked a screen in the picker this session
   if (cap) {
@@ -183,6 +187,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     });
   }
   async function armSystemShare() {
+    if (!sysAudioOk()) { lastShareFailure = "noaudio"; return false; }
     if (!cap || !cap.isActive("system")) {
       if (!(await shareGuide())) { lastShareFailure = "cancelled"; setNote("share", "warning", "Screen share cancelled", "Computer audio comes through screen sharing. Share a window or screen and include its audio.", { label: "Share screen", run: shareScreen }); return false; }
       try {
@@ -328,7 +333,8 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     }
     if (s.running) starting = 0;
     // Ending a session brings Computer audio back on, so the resting state always starts from the default.
-    if (wasRunning && !s.running && !s.enabled.system && !s.enabled.mic) send({ type: "config", enabled: { system: true } });
+    if (wasRunning && !s.running && !s.enabled.system && !s.enabled.mic) send({ type: "config", enabled: sysAudioOk() ? { system: true } : { mic: true } });
+    $("en-system").disabled = !sysAudioOk();
     if (wasRunning && !s.running) clearNote("share");
     wasRunning = !!s.running;
     const btn = $("start-btn");
@@ -546,7 +552,9 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     }
     const saved = !!state.has_api_key;
     const share = !!(state.capture && state.capture.system === "browser");
-    $("ob-share-text").innerHTML = share
+    $("ob-share-text").innerHTML = share && !sysAudioOk()
+      ? "This browser can't share computer audio, so your microphone is used. For computer audio, open this page in Chrome or Edge on a computer."
+      : share
       ? "Audio from your meeting is picked up through browser screen sharing. Only the audio is used, for transcription and translation."
       : "Audio from your meeting is picked up through macOS screen recording. Only the audio is used, for transcription and translation.";
     renderSaveBtn($("ob-save"), saved && !$("ob-key").value, "Save", "", !!$("ob-key").value);
@@ -610,7 +618,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
           <p class="help rest-hint" id="rest-hint" role="status"></p>
           </div>`);
         feed.appendChild(empty);
-        if (!viewer && state && !state.running && !state.enabled.system && !state.enabled.mic) send({ type: "config", enabled: { system: true } });
+        if (!viewer && state && !state.running && !state.enabled.system && !state.enabled.mic) send({ type: "config", enabled: sysAudioOk() ? { system: true } : { mic: true } });
         if (!viewer) {
           $("rest-mic").onclick = () => toggleSource("mic");
           $("rest-system").onclick = () => toggleSource("system");
@@ -637,8 +645,8 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
   function renderRestHint(nosrc) {
     const h = $("rest-hint"); if (!h || !state) return;
     const share = !!(state.capture && state.capture.system === "browser");
-    if (nosrc) { h.className = "help rest-hint error show"; h.setAttribute("role", "alert"); h.textContent = "Turn on the mic or computer audio to start."; }
-    else if (state.enabled.system && share) { h.className = "help rest-hint show"; h.setAttribute("role", "status"); h.innerHTML = "When sharing your screen, please include audio.<br>Only the audio is used; your screen is never recorded."; }
+    if (nosrc) { h.className = "help rest-hint error show"; h.setAttribute("role", "alert"); h.textContent = sysAudioOk() ? "Turn on the mic or computer audio to start." : "Turn on the mic to start."; }
+    else if (state.enabled.system && share && sysAudioOk()) { h.className = "help rest-hint show"; h.setAttribute("role", "status"); h.innerHTML = "When sharing your screen, please include audio.<br>Only the audio is used; your screen is never recorded."; }
     else { h.className = "help rest-hint"; h.textContent = ""; }
   }
   function renderRest() {
@@ -649,10 +657,12 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     $("rest-text").textContent = running ? "Start speaking, or play something on your computer. Translation begins as soon as audio comes in." : "Choose how your conversation is picked up, then press Start.";
     $("rest-controls").hidden = running;
     renderRestHint(nosrc);
+    const sysOk = sysAudioOk();
+    $("rest-system").disabled = !sysOk;
     for (const name of ["mic", "system"]) {
-      const on = !!state.enabled[name];
+      const on = !!state.enabled[name] && (name !== "system" || sysOk);
       setToggle("rest-" + name, on);
-      const base = name === "mic" ? "What you say, through your microphone" : "What other apps on this computer play, like your meeting";
+      const base = name === "mic" ? "What you say, through your microphone" : sysOk ? "What other apps on this computer play, like your meeting" : NO_SYS_TEXT;
       const st = srcStatus[name];
       const sub = $("rest-sub-" + name); sub.textContent = on && running && st && st !== "Idle" ? `${st} · ${base}` : base; sub.title = base;
     }
@@ -860,6 +870,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
   };
   for (const b of $("translate-mode").querySelectorAll(".opt")) b.onclick = () => send({ type: "config", hq: b.dataset.hq === "1" });
   async function toggleSource(name) {
+    if (name === "system" && !sysAudioOk()) return;
     const v = !isOn("en-" + name);
     if (v && name === "system" && cap && state && state.running) { if (!(await armSystemShare())) return; }
     setToggle("en-" + name, v); if ($("rest-" + name)) setToggle("rest-" + name, v);
@@ -942,6 +953,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
 
   // URL switches used for design review: ?theme=dark|light  ?settings=1  ?demo=1 (fixture, no server)  ?menu=mic
   const q = q0;
+  if (q.get("nosys") && cap) cap.systemAudioSupported = () => false;
   if (q.get("theme")) root.dataset.theme = q.get("theme");
   if (q.get("onboarding")) { try { localStorage.removeItem("rt.onboarded"); } catch (e) {} }
   syncThemeBtn();

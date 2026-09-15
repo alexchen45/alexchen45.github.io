@@ -446,6 +446,9 @@ input[type=number]:hover::-webkit-inner-spin-button, input[type=number]:focus::-
 .rt-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 0; border-radius: 8px; background: transparent; color: var(--gray-1000); font: inherit; text-align: left; cursor: pointer; transition: background 150ms ease-in-out; }
 .rest-tile:has(.rt-more) .rt-main { border-radius: 8px 0 0 8px; }
 .rt-main:hover { background: var(--ga-100); }
+.rt-main:disabled { cursor: default; }
+.rt-main:disabled:hover { background: transparent; }
+.rt-main:disabled .rt-switch { opacity: .45; }
 .rt-main:focus-visible { outline: none; box-shadow: var(--focus-ring); z-index: 1; }
 .rt-icon { flex: none; display: flex; color: var(--gray-1000); }
 .rt-main[aria-checked="false"] .rt-icon { color: var(--gray-700); }

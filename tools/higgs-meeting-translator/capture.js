@@ -92,10 +92,18 @@ window.RTCapture = (() => {
       try { const list = await navigator.mediaDevices.enumerateDevices(); return list.filter((d) => d.kind === "audioinput"); }
       catch (e) { return []; }
     },
+    // Can this browser hand us the computer's audio through screen sharing? Phones have no screen sharing
+    // at all; Safari and Firefox share video only; Chromium does audio on Windows/ChromeOS (74+) and on
+    // macOS from 141 (with macOS 14.2+). Linux Chromium only offers a tab's audio, which is not the same thing.
     systemAudioSupported() {
-      const m = navigator.userAgent.match(/Chrome\/(\d+)/);
-      return !!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) && !!m && parseInt(m[1], 10) >= 141
-        && /Mac OS X/.test(navigator.userAgent);
+      if (!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia)) return false;
+      const ua = navigator.userAgent;
+      const m = ua.match(/Chrome\/(\d+)/);
+      if (!m || /Firefox|FxiOS|CriOS|EdgiOS/.test(ua)) return false;
+      const v = parseInt(m[1], 10);
+      if (/Windows|CrOS/.test(ua)) return v >= 74;
+      if (/Mac OS X/.test(ua)) return v >= 141;
+      return false;
     },
   };
 })();
