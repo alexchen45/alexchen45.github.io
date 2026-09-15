@@ -165,8 +165,26 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
   }
   // getDisplayMedia needs a user gesture: called from the click that turns call audio on / starts.
   let lastShareFailure = "";
+  // Before the browser's sharing window opens: what computer audio is, and to include audio in the share.
+  function shareGuide() {
+    const dlg = $("share-guide");
+    let seen = false; try { seen = localStorage.getItem("rt.shareGuideSeen") === "1"; } catch (e) {}
+    if (!dlg || seen) return Promise.resolve(true);
+    return new Promise((resolve) => {
+      const v = dlg.querySelector("video");   // loops natively; the file itself holds its last frame for a second
+      dlg.addEventListener("close", () => {
+        v.pause();
+        if ($("share-guide-skip").checked) { try { localStorage.setItem("rt.shareGuideSeen", "1"); } catch (e) {} }
+        resolve(dlg.returnValue === "ok");
+      }, { once: true });
+      dlg.returnValue = "";
+      dlg.showModal();
+      v.currentTime = 0; v.play().catch(() => {});
+    });
+  }
   async function armSystemShare() {
     if (!cap || !cap.isActive("system")) {
+      if (!(await shareGuide())) { lastShareFailure = "cancelled"; setNote("share", "warning", "Screen share cancelled", "Computer audio comes through screen sharing. Share a window or screen and include its audio.", { label: "Share screen", run: shareScreen }); return false; }
       try {
         const ok = await cap.startSystem();
         if (!ok) { lastShareFailure = "noaudio"; setNote("share", "warning", "No audio detected in screen sharing", "Share again and make sure audio is included in your browser's sharing options.", { label: "Try again", run: shareScreen }); return false; }
@@ -913,7 +931,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
   }
   document.addEventListener("keydown", (e) => {
     if (viewer) return;
-    if ($("confirm-new").open) return;
+    if ($("confirm-new").open || $("share-guide").open) return;
     const typing = ["INPUT", "SELECT", "TEXTAREA", "BUTTON", "SUMMARY"].includes(document.activeElement.tagName);
     // N-5: a mouse click leaves focus on the Start/Stop button, where Space would natively re-activate it
     if (e.key === " " && document.activeElement === $("start-btn") && state && state.running) { e.preventDefault(); return; }
@@ -944,6 +962,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
       if (q.get("menu") === "rest") openMicMenu(true, $("rest-mic-arrow"));
       if (q.get("tip")) { const t = $("tip-" + q.get("tip")); if (t) t.parentElement.classList.add("open"); }
       if (q.get("modal") === "new") $("new-session-btn").click();
+      if (q.get("modal") === "share") shareGuide();
       if (q.get("mode")) setReadingMode(q.get("mode"), false);
       if (q.get("turns")) { $("advanced").scrollIntoView(); }
       if (q.get("note") === "share") setNote("share", "warning", "Screen share cancelled", "Computer audio comes through screen sharing. Share a window or screen and include its audio.", { label: "Share screen", run: shareScreen });

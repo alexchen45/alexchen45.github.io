@@ -178,6 +178,11 @@ details[open] .chev { transform: rotate(45deg); }
 .modal-title { margin: 0 0 8px; font: 600 16px/24px var(--font-sans); letter-spacing: -0.32px; }
 .modal-body { margin: 0; color: var(--gray-900); }
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+.modal-wide { width: min(600px, calc(100vw - 48px)); }
+.modal-body + .modal-body { margin-top: 8px; }
+.guide-video { display: block; width: 100%; margin-top: 16px; border-radius: 8px; box-shadow: 0 0 0 1px var(--ga-400); background: #1c1c1c; }
+.modal-check { display: flex; align-items: center; gap: 8px; margin-top: 16px; font-size: 13px; line-height: 16px; color: var(--gray-900); cursor: pointer; }
+.modal-check input { width: 14px; height: 14px; margin: 0; accent-color: var(--gray-1000); }
 
 /* ---------- segmented switch ---------- */
 .switch { display: flex; height: 36px; padding: 4px; border-radius: 6px; background: var(--bg-100); box-shadow: 0 0 0 1px var(--ga-400); }
