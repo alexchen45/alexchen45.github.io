@@ -1,0 +1,343 @@
+{
+ "state": {
+  "type": "state",
+  "running": true,
+  "has_api_key": true,
+  "target_language": "English",
+  "source_hint": "",
+  "enabled": {
+   "mic": false,
+   "system": true
+  },
+  "mic_device": "",
+  "labels": {
+   "mic": "Mic audio",
+   "system": "Computer audio"
+  },
+  "session_dir": "/Volumes/Data/Tools/realtime-translate/transcripts/20260914-184028",
+  "devices": [
+   {
+    "name": "MacBook Pro Microphone",
+    "inputs": 1,
+    "outputs": 0,
+    "default_input": true
+   },
+   {
+    "name": "AirPods",
+    "inputs": 1,
+    "outputs": 2,
+    "default_input": false
+   },
+   {
+    "name": "Insta360 Link 2C Pro",
+    "inputs": 1,
+    "outputs": 0,
+    "default_input": false
+   },
+   {
+    "name": "TP-7",
+    "inputs": 6,
+    "outputs": 6,
+    "default_input": false
+   }
+  ],
+  "group_gap_s": 0.6,
+  "hq": true,
+  "card_cap_s": 20.0,
+  "speaker_notes": "Caller — claims to be the bank's security department\nReceptionist — answers the phone for Mr. Winai",
+  "segmenter": {
+   "pause_ms": 600,
+   "soft_max_ms": 5000,
+   "hard_max_ms": 10000
+  },
+  "sources": {
+   "mic": {
+    "capturing": true,
+    "level": 0.35,
+    "error": null,
+    "silent_s": 0,
+    "connected": true,
+    "api_error": null
+   },
+   "system": {
+    "capturing": true,
+    "level": 0.6,
+    "error": null,
+    "silent_s": 0,
+    "connected": true,
+    "api_error": null
+   }
+  },
+  "viewer_url": "http://192.168.1.23:8766/",
+  "capture": {
+   "mic": "browser",
+   "system": "browser"
+  },
+  "key_source": "saved",
+  "key_hint": "7f2a"
+ },
+ "cards": [
+  {
+   "id": "c1",
+   "source": "system",
+   "started_at": 1789437721.268893,
+   "line_ids": [
+    "system:l1"
+   ],
+   "last_end": 1789437727.568893,
+   "speech_s": 6.3,
+   "refined": "Hello, this is Sompong. I'm calling from the bank's security verification department regarding your account, Mr. Winai.",
+   "covers": 1,
+   "refine_status": "done",
+   "closed": true,
+   "speaker": "Caller",
+   "hq": true
+  },
+  {
+   "id": "c2",
+   "source": "system",
+   "started_at": 1789437729.368893,
+   "line_ids": [
+    "system:l2"
+   ],
+   "last_end": 1789437734.768893,
+   "speech_s": 5.4,
+   "refined": "Hello, Mr. Sompong. What is this call about? I'd be happy to take the details for you.",
+   "covers": 1,
+   "refine_status": "done",
+   "closed": true,
+   "speaker": "Receptionist",
+   "hq": true
+  },
+  {
+   "id": "c3",
+   "source": "system",
+   "started_at": 1789437735.768893,
+   "line_ids": [
+    "system:l3",
+    "system:l4",
+    "system:l5"
+   ],
+   "last_end": 1789437753.068893,
+   "speech_s": 17.3,
+   "refined": "The bank has detected an unusual transfer in your account, Mr. Winai. We found a transfer of 100,000 baht to a destination account related to the mule account we are currently investigating.",
+   "covers": 3,
+   "refine_status": "done",
+   "closed": true,
+   "speaker": "Caller",
+   "hq": true
+  },
+  {
+   "id": "c4",
+   "source": "system",
+   "started_at": 1789437754.868893,
+   "line_ids": [
+    "system:l6",
+    "system:l7"
+   ],
+   "last_end": 1789437762.868893,
+   "speech_s": 8.0,
+   "refined": "I understand. Does Mr. Sompong want Mr. Winai to be informed about this and call back? Would it be convenient to contact you at this number?",
+   "covers": 2,
+   "refine_status": "done",
+   "closed": true,
+   "speaker": "Receptionist",
+   "hq": true
+  },
+  {
+   "id": "c5",
+   "source": "system",
+   "started_at": 1789437763.868893,
+   "line_ids": [
+    "system:l8",
+    "system:l9",
+    "system:l10"
+   ],
+   "last_end": 1789437776.368893,
+   "speech_s": 12.5,
+   "refined": "Actually, we need to verify with Mr. Winai first. Could you please have Mr. Winai confirm his identity with us by providing his 13-digit national ID number?",
+   "covers": 3,
+   "refine_status": "done",
+   "closed": true,
+   "speaker": "Caller",
+   "hq": true
+  },
+  {
+   "id": "c6",
+   "source": "system",
+   "started_at": 1789437778.668893,
+   "line_ids": [
+    "system:l11",
+    "system:l12"
+   ],
+   "last_end": 1789437785.268893,
+   "speech_s": 6.6,
+   "refined": "",
+   "covers": 0,
+   "refine_status": "",
+   "closed": false,
+   "speaker": "",
+   "hq": true
+  }
+ ],
+ "segments": [
+  {
+   "id": "system:l1",
+   "source": "system",
+   "started_at": 1789437721.268893,
+   "ended_at": 1789437727.568893,
+   "transcript": "สวัสดีครับผมสมพงศ์นะครับโทรมาจากฝ่ายตรวจสอบความปลอดภัยของธนาคารบัญชีของคุณวินัยครับ",
+   "translation": "Hello, this is a call from the bank's security audit department.",
+   "status": "done",
+   "item_id": null,
+   "response_id": null,
+   "card_id": "c1"
+  },
+  {
+   "id": "system:l2",
+   "source": "system",
+   "started_at": 1789437729.368893,
+   "ended_at": 1789437734.768893,
+   "transcript": "สวัสดีค่ะคุณสมพงศ์ติดต่อมาเรื่องอะไรคะยินดีช่วยรับเรื่องไว้ให้ค่ะ",
+   "translation": "Hello, Mr. Sompong. What's this call about? I can hear you clearly.",
+   "status": "done",
+   "item_id": null,
+   "response_id": null,
+   "card_id": "c2"
+  },
+  {
+   "id": "system:l3",
+   "source": "system",
+   "started_at": 1789437735.768893,
+   "ended_at": 1789437745.368893,
+   "transcript": "ธนาคารตรวจสอบ เอ่อ พบรายการโอนเงินผิดปกติของบัญชีธนาคารของคุณวินัยครับ เราพบจำนวนหนึ่งแสนบาท มีการโอนออก",
+   "translation": "We found an unusual transaction of 10,000 baht from your account.",
+   "status": "done",
+   "item_id": null,
+   "response_id": null,
+   "card_id": "c3"
+  },
+  {
+   "id": "system:l4",
+   "source": "system",
+   "started_at": 1789437745.468893,
+   "ended_at": 1789437750.8688931,
+   "transcript": "ไปยังบัญชีปลายทางที่มีความเกี่ยวข้องกับบัญชีม้าที่เรากำลัง",
+   "translation": "to a bank account that is related to a bank account that we are",
+   "status": "done",
+   "item_id": null,
+   "response_id": null,
+   "card_id": "c3"
+  },
+  {
+   "id": "system:l5",
+   "source": "system",
+   "started_at": 1789437751.168893,
+   "ended_at": 1789437753.468893,
+   "transcript": "ดำเนินการตรวจสอบอยู่ในขณะนี้ครับ",
+   "translation": "We are currently investigating this matter.",
+   "status": "done",
+   "item_id": null,
+   "response_id": null,
+   "card_id": "c3"
+  },
+  {
+   "id": "system:l6",
+   "source": "system",
+   "started_at": 1789437754.868893,
+   "ended_at": 1789437760.268893,
+   "transcript": "เข้าใจแล้วค่ะ คุณสมพงศ์ต้องการให้คุณวินัยทราบเรื่องนี้และติดต่อกลับหรือไม่คะ?",
+   "translation": "Understood. Mr. Sompong needs to inform Mr. Vinai about this and get a response.",
+   "status": "done",
+   "item_id": null,
+   "response_id": null,
+   "card_id": "c4"
+  },
+  {
+   "id": "system:l7",
+   "source": "system",
+   "started_at": 1789437760.668893,
+   "ended_at": 1789437763.268893,
+   "transcript": "สะดวกให้ติดต่อกลับที่เบอร์นี้เลยไหมคะ?",
+   "translation": "Sure, I can have him call back at this number.",
+   "status": "done",
+   "item_id": null,
+   "response_id": null,
+   "card_id": "c4"
+  },
+  {
+   "id": "system:l8",
+   "source": "system",
+   "started_at": 1789437763.868893,
+   "ended_at": 1789437767.6688929,
+   "transcript": "อ๋อจริงๆแล้วคือเราต้องการทำการตรวจสอบกับคุณวินัยครับ",
+   "translation": "Actually, we need to verify with Mr. Vinai.",
+   "status": "done",
+   "item_id": null,
+   "response_id": null,
+   "card_id": "c5"
+  },
+  {
+   "id": "system:l9",
+   "source": "system",
+   "started_at": 1789437767.868893,
+   "ended_at": 1789437770.768893,
+   "transcript": "ก่อนอื่นเลยเราขอ",
+   "translation": "First of all, we would like to",
+   "status": "done",
+   "item_id": null,
+   "response_id": null,
+   "card_id": "c5"
+  },
+  {
+   "id": "system:l10",
+   "source": "system",
+   "started_at": 1789437770.968893,
+   "ended_at": 1789437776.768893,
+   "transcript": "เอ่อให้คุณวินัยช่วยยืนยันตัวตนกับเราก่อนได้ไหมครับโดยการบอกเลขประจำตัวประชาชนสิบสามหลัก",
+   "translation": "Could you have Mr. Vinai confirm his identity by providing his thirteen-digit national ID number?",
+   "status": "done",
+   "item_id": null,
+   "response_id": null,
+   "card_id": "c5"
+  },
+  {
+   "id": "system:l11",
+   "source": "system",
+   "started_at": 1789437778.668893,
+   "ended_at": 1789437785.268893,
+   "transcript": "เข้าใจแล้วค่ะ คุณสมพงษ์ คุณต้องการให้คุณวินัยยืนยันตัวตนด้วยเลขประจำตัวประชาชน 13 หลัก",
+   "translation": "Understood. Mr. Sompong, you need Mr. Vinai to verify his identity with his 13-digit ID number.",
+   "status": "translating",
+   "item_id": null,
+   "response_id": null,
+   "card_id": "c6"
+  },
+  {
+   "id": "system:l12",
+   "source": "system",
+   "started_at": 1789437785.668893,
+   "ended_at": null,
+   "transcript": "",
+   "translation": "",
+   "status": "speaking",
+   "item_id": null,
+   "response_id": null,
+   "card_id": "c6"
+  }
+ ],
+ "logs": [
+  {
+   "at": 1789437721.268893,
+   "level": "info",
+   "source": "",
+   "message": "Started. Translating to English."
+  },
+  {
+   "at": 1789437721.768893,
+   "level": "info",
+   "source": "system",
+   "message": "system audio capture running"
+  }
+ ]
+}
