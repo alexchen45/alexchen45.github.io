@@ -145,7 +145,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
         const mp = $("mic-perm"); if (mp) mp.textContent = "Using " + label + ".";
         clearNote("micperm");
       } catch (e) {
-        setNote("micperm", "error", "Microphone blocked", "Allow the microphone for this site (the icon in the address bar), then turn the microphone on again.");
+        setNote("micperm", "error", "Microphone blocked", "Allow the microphone for this site in your browser (usually the icon next to the address), then turn the microphone on again.");
         send({ type: "config", enabled: { mic: false } });
       }
     } else if (!wantMic && cap.isActive("mic")) { await cap.stop("mic"); send({ type: "audio_stop", source: "mic" }); }
@@ -169,10 +169,10 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     if (!cap || !cap.isActive("system")) {
       try {
         const ok = await cap.startSystem();
-        if (!ok) { lastShareFailure = "noaudio"; setNote("share", "warning", "No system audio in that share", "Pick Entire Screen and tick \u201cAlso share system audio\u201d.", { label: "Try again", run: shareScreen }); return false; }
+        if (!ok) { lastShareFailure = "noaudio"; setNote("share", "warning", "No audio detected in screen sharing", "Share again and make sure audio is included in your browser's sharing options.", { label: "Try again", run: shareScreen }); return false; }
         send({ type: "audio_start", source: "system" });
         clearNote("share");
-      } catch (e) { lastShareFailure = "cancelled"; setNote("share", "warning", "Screen share cancelled", "Computer audio comes through screen sharing. Pick a window or screen and turn on Share audio to use it.", { label: "Share screen", run: shareScreen }); return false; }
+      } catch (e) { lastShareFailure = "cancelled"; setNote("share", "warning", "Screen share cancelled", "Computer audio comes through screen sharing. Share a window or screen and include its audio.", { label: "Share screen", run: shareScreen }); return false; }
     }
     systemArmed = true;
     return true;
@@ -620,7 +620,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     const h = $("rest-hint"); if (!h || !state) return;
     const share = !!(state.capture && state.capture.system === "browser");
     if (nosrc) { h.className = "help rest-hint error show"; h.setAttribute("role", "alert"); h.textContent = "Turn on the mic or computer audio to start."; }
-    else if (state.enabled.system && share) { h.className = "help rest-hint show"; h.setAttribute("role", "status"); h.innerHTML = "When sharing your screen, please turn on Share audio.<br>Only the audio is used; your screen is never recorded."; }
+    else if (state.enabled.system && share) { h.className = "help rest-hint show"; h.setAttribute("role", "status"); h.innerHTML = "When sharing your screen, please include audio.<br>Only the audio is used; your screen is never recorded."; }
     else { h.className = "help rest-hint"; h.textContent = ""; }
   }
   function renderRest() {
@@ -946,7 +946,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
       if (q.get("modal") === "new") $("new-session-btn").click();
       if (q.get("mode")) setReadingMode(q.get("mode"), false);
       if (q.get("turns")) { $("advanced").scrollIntoView(); }
-      if (q.get("note") === "share") setNote("share", "warning", "Screen share cancelled", "Computer audio comes through screen sharing. Pick a window or screen and turn on Share audio to use it.", { label: "Share screen", run: shareScreen });
+      if (q.get("note") === "share") setNote("share", "warning", "Screen share cancelled", "Computer audio comes through screen sharing. Share a window or screen and include its audio.", { label: "Share screen", run: shareScreen });
       else if (q.get("note")) setNote("sig-mic", "warning", "No microphone signal", "Check the selected device, and allow Microphone access for Higgs Meeting Translator in System Settings → Privacy & Security.");
       if (q.get("drafts")) for (const c of cards.values()) if (c.data.refined) { c.el.classList.add("show-drafts"); renderCard(c.data); }
       if (q.get("disconnected")) { simDisconnected = true; setConnected(false); }
