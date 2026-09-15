@@ -113,7 +113,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     const p = prefs.get();
     engine.send({ type: "config", target_language: p.target_language, source_hint: p.source_hint || "", hq: p.hq !== false,
                   speaker_notes: p.speaker_notes || "", group_gap_s: p.group_gap_s, segmenter: p.segmenter,
-                  enabled: { mic: false, system: true } });
+                  enabled: p.enabled && (p.enabled.mic || p.enabled.system) ? p.enabled : { mic: false, system: true } });
     setConnected(true);
     handle(engine.snapshot());
     renderSessions();
@@ -288,7 +288,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     }
     if (s.running) starting = 0;
     // Ending a session brings Computer audio back on, so the resting state always starts from the default.
-    if (wasRunning && !s.running && !s.enabled.system) send({ type: "config", enabled: { system: true } });
+    if (wasRunning && !s.running && !s.enabled.system && !s.enabled.mic) send({ type: "config", enabled: { system: true } });
     if (wasRunning && !s.running) clearNote("share");
     wasRunning = !!s.running;
     const btn = $("start-btn");
@@ -308,7 +308,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
       if (!known.includes(s.target_language) && document.activeElement !== $("target-custom")) $("target-custom").value = s.target_language;
     } else { sel.value = s.target_language; $("target-custom").hidden = true; }
     if (document.activeElement !== $("source-hint")) $("source-hint").value = s.source_hint || "";
-    if (!demo) prefs.set({ target_language: s.target_language, source_hint: s.source_hint, hq: s.hq, speaker_notes: s.speaker_notes, group_gap_s: s.group_gap_s, segmenter: s.segmenter });
+    if (!demo) prefs.set({ target_language: s.target_language, source_hint: s.source_hint, hq: s.hq, speaker_notes: s.speaker_notes, group_gap_s: s.group_gap_s, segmenter: s.segmenter, enabled: s.enabled });
 
     const nums = { "pause-ms": s.segmenter && s.segmenter.pause_ms, "soft-max": s.segmenter && s.segmenter.soft_max_ms / 1000,
                    "hard-max": s.segmenter && s.segmenter.hard_max_ms / 1000, "group-gap": s.group_gap_s };
@@ -570,7 +570,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
           <p class="help rest-hint" id="rest-hint" role="status"></p>
           </div>`);
         feed.appendChild(empty);
-        if (!viewer && state && !state.running && !state.enabled.system) send({ type: "config", enabled: { system: true } });
+        if (!viewer && state && !state.running && !state.enabled.system && !state.enabled.mic) send({ type: "config", enabled: { system: true } });
         if (!viewer) {
           $("rest-mic").onclick = () => toggleSource("mic");
           $("rest-system").onclick = () => toggleSource("system");
