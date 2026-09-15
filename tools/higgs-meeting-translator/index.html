@@ -20,7 +20,7 @@
     <header class="topbar">
       <h1 class="title">Higgs Meeting Translator</h1>
       <div class="topbar-right">
-        <button class="btn btn-secondary btn-sm" id="new-session-btn" aria-label="New Session"><svg class="short" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg><span class="long">New Session</span></button>
+        <button class="btn btn-secondary btn-sm" id="new-session-btn" aria-label="New Session"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg><span class="long">New Session</span></button>
         <button class="btn btn-tertiary btn-sq btn-sm" id="download-btn" aria-label="Download transcript" title="Download transcript (Markdown)">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M2.5 12.5v1h11v-1"/></svg>
         </button>
@@ -65,8 +65,8 @@
         </button>
       </div>
       <button class="btn btn-secondary cb-new" id="cb-new" title="New Session" hidden>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg>
         <span class="long">New Session</span>
-        <svg class="short" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg>
       </button>
     </div>
 
@@ -196,7 +196,7 @@
       <p class="modal-body">When the sharing window opens, choose the app your audio plays through, or your entire screen, and <strong>make sure audio sharing is turned on</strong>.</p>
       <video class="guide-video" src="share-guide.mp4" muted loop playsinline preload="auto" aria-label="The browser's sharing window with the audio option being turned on"></video>
       <label class="modal-check"><input type="checkbox" id="share-guide-skip"> Don't show this again</label>
-      <div class="modal-actions"><button class="btn btn-primary" value="ok" id="share-guide-ok">Start sharing</button></div>
+      <div class="modal-actions"><button class="btn btn-secondary" value="cancel">Cancel</button><button class="btn btn-primary" value="ok" id="share-guide-ok">Start sharing</button></div>
     </form>
   </dialog>
 </div>

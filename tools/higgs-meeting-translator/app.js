@@ -841,6 +841,12 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
   $("start-btn").onclick = (e) => { startStop(); if (e.detail) $("start-btn").blur(); };
   $("log-btn").onclick = () => { const l = $("log"); l.hidden = !l.hidden; $("log-btn").setAttribute("aria-expanded", String(!l.hidden)); $("log-btn").textContent = l.hidden ? "Show Log" : "Hide Log"; };
   $("cb-new").onclick = () => $("new-session-btn").click();
+  for (const dlg of document.querySelectorAll("dialog.modal")) {
+    dlg.addEventListener("click", (e) => {
+      const r = dlg.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close("cancel");
+    });
+  }
   $("new-session-btn").onclick = () => {
     if (!cards.size) return send({ type: "new_session" });
     $("confirm-folder").textContent = "this browser";

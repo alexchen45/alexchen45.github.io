@@ -202,7 +202,6 @@ details[open] .chev { transform: rotate(45deg); }
 .cb-group, .cb-btn, .cb-arrow { height: 40px; }
 .btn[aria-disabled="true"], .btn.running[aria-disabled="true"] { cursor: not-allowed; color: var(--gray-700); background: var(--gray-100); box-shadow: 0 0 0 1px var(--gray-400); }
 .btn.running[aria-disabled="true"] .icon-stop { color: inherit; }
-#new-session-btn .short { display: none; }
 .cb-group { position: relative; display: flex; align-items: center; border-radius: 6px; box-shadow: 0 0 0 1px var(--ga-400); }
 .cb-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 6px;
   background: transparent; color: var(--gray-1000); cursor: pointer; transition: background 150ms ease-in-out, color 150ms ease-in-out; }
@@ -376,14 +375,12 @@ input[type=number]:hover::-webkit-inner-spin-button, input[type=number]:focus::-
 .viewer .jump { bottom: 24px; }
 .viewer .topbar::after { content: "Live view"; margin-left: auto; font-size: 13px; line-height: 16px; color: var(--gray-900); }
 
-.cb-new .short { display: none; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {
   .sidebar { position: fixed; top: 0; width: min(340px, 90vw); z-index: 200; }
   .topbar { padding: 0 16px; gap: 8px; }
   .hq-text, #new-session-btn .long { display: none; }
-  #new-session-btn .short { display: block; }
   #new-session-btn { width: 32px; padding: 0; }
   .app.settings-open .main { margin-right: 0; }
   .hq { width: 32px; height: 32px; padding: 0; justify-content: center; }
@@ -410,7 +407,7 @@ input[type=number]:hover::-webkit-inner-spin-button, input[type=number]:focus::-
   .note > span:not(.note-icon) { grid-column: 1 / -1; }
   .note .btn:not(.dismiss) { grid-column: 1 / -1; justify-self: start; margin-top: 4px; }
   .ob-action .ghost { display: none; }
-  .cb-new .long { display: none; } .cb-new .short { display: block; }
+  .cb-new .long { display: none; }
   .translation-only .line.tr, .translation-only .refined { padding-left: 0; box-shadow: none; }
 }
 
