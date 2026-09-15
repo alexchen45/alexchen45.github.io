@@ -88,7 +88,7 @@ kbd { display: inline-flex; align-items: center; justify-content: center; min-wi
 
 /* ---------- layout ---------- */
 .app { position: relative; height: 100%; }
-.main { display: flex; flex-direction: column; height: 100%; min-width: 0; position: relative; background: var(--bg-100); z-index: 0; }
+.main { display: flex; flex-direction: column; height: 100%; min-width: 0; position: relative; background: var(--bg-100); z-index: 0; transition: margin-right 200ms cubic-bezier(.175,.885,.32,1.1); }
 .app.settings-open .main { margin-right: 320px; }
 .topbar { position: relative; z-index: 20; display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 24px; background: var(--bg-100); border-bottom: 1px solid var(--ga-400); flex: none; }
 .title { margin: 0; font-size: 16px; line-height: 24px; font-weight: 600; letter-spacing: -0.32px; white-space: nowrap; }
@@ -462,6 +462,8 @@ input[type=number]:hover::-webkit-inner-spin-button, input[type=number]:focus::-
 .cb-new:hover { box-shadow: var(--shadow-menu); }
 .empty .btn.btn-start.rest-start.running { box-shadow: 0 0 0 1px var(--ga-400); }
 .app.resting .controlbar { display: none; }
+.fly-ghost { position: fixed; z-index: 60; pointer-events: none; box-sizing: border-box; display: flex; align-items: center; justify-content: center; overflow: hidden; white-space: nowrap; font: 500 14px/20px var(--font-sans); }
+@media (prefers-reduced-motion: reduce) { .fly-ghost { display: none; } .main { transition: none; } }
 .app.resting .feed { padding-bottom: 24px; }
 @media (max-width: 900px) {
   .empty.onboarding { padding: 8px 4px 16px; }

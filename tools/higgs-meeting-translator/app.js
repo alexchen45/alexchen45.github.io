@@ -222,13 +222,17 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
   // ------------------------------------------------------------------ notes
   const notes = new Map();
   let notesSig = "";
+  // Only the most useful alert is shown; the rest wait their turn (a cause before its consequence).
+  const NOTE_PRIORITY = ["conn", "key", "err-mic", "err-system", "micperm", "share", "sig-mic", "nosrc"];
+  const noteRank = (key) => { const i = NOTE_PRIORITY.indexOf(key); return i < 0 ? NOTE_PRIORITY.length : i; };
   function renderNotes() {
     const sig = [...notes].map(([k, n]) => k + n.kind + n.title + n.body).join("|");
     if (sig === notesSig) return;
     notesSig = sig;
     const box = $("notes");
     box.innerHTML = "";
-    for (const [key, n] of notes) {
+    const top = [...notes].sort((a, b) => noteRank(a[0]) - noteRank(b[0])).slice(0, 1);
+    for (const [key, n] of top) {
       const el = document.createElement("div");
       el.className = "note note-" + n.kind;
       el.setAttribute("role", "status");
@@ -535,9 +539,45 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     updateEmpty();
     if (focusStart) ($("rest-start") || $("start-btn")).focus();
   }
+  // Where the capture controls currently are: in the resting card or in the floating bar.
+  function controlSpots() {
+    const rest = $("rest-controls"), bar = document.querySelector(".controlbar");
+    const vis = (el) => el && el.getClientRects().length > 0;
+    const spot = (mode, els) => {   // everything is measured now: the buttons change look and size right after
+      const out = { mode, rects: {}, looks: {}, els };
+      for (const k in els) { const el = els[k]; if (!el) continue; const cs = getComputedStyle(el);
+        out.rects[k] = el.getBoundingClientRect();
+        out.looks[k] = { text: el.textContent.trim(), bg: cs.backgroundColor, color: cs.color, radius: cs.borderRadius, shadow: cs.boxShadow }; }
+      return out;
+    };
+    if (rest && !rest.hidden && vis($("rest-start"))) return spot("rest", { start: $("rest-start"), mic: $("tile-mic"), system: $("tile-system") });
+    if (vis($("start-btn"))) return spot("bar", { start: $("start-btn"), mic: $("en-mic"), system: $("en-system") });
+    return null;
+  }
+  // A short "the buttons move there" animation when the controls change home.
+  function flyControls(from, to) {
+    if (!from || !to || from.mode === to.mode || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    for (const name of ["start", "mic", "system"]) {
+      const a = from.els[name], b = to.els[name]; if (!a || !b) continue;
+      const r0 = from.rects[name], r1 = to.rects[name];   // "from" was measured before the layout changed
+      if (!r0 || !r1 || !r0.width || !r1.width) continue;
+      const look = from.looks[name], g = document.createElement("div");
+      g.className = "fly-ghost";
+      g.style.cssText = `left:${r0.left}px;top:${r0.top}px;width:${r0.width}px;height:${r0.height}px;background:${look.bg};color:${look.color};border-radius:${look.radius};box-shadow:${look.shadow}`;
+      if (name === "start") g.textContent = look.text;
+      document.body.appendChild(g);
+      const anim = g.animate([
+        { transform: "translate(0,0)", width: r0.width + "px", height: r0.height + "px", opacity: 1 },
+        { transform: `translate(${r1.left - r0.left}px,${r1.top - r0.top}px)`, width: r1.width + "px", height: r1.height + "px", opacity: 0.15 },
+      ], { duration: 340, easing: "cubic-bezier(.2,.7,.2,1)", fill: "forwards" });
+      anim.onfinish = () => g.remove();
+      setTimeout(() => g.remove(), 600);
+    }
+  }
   function updateEmpty() {
     let empty = $("empty");
     const appEl = document.querySelector(".app");
+    const spotsBefore = (!viewer && state && $("empty")) ? controlSpots() : null;   // only when the controls change home
     if (segs.size === 0 && needsOnboarding()) { renderOnboarding(); const dl0 = $("download-btn"); if (dl0) dl0.disabled = true; appEl.classList.toggle("resting", !viewer); return; }
     if (empty && empty.classList.contains("onboarding")) { empty.remove(); empty = null; }
     if (segs.size === 0) {
@@ -581,6 +621,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
       renderRest();
     } else if (empty) empty.remove();
     appEl.classList.toggle("resting", !!$("empty") && !viewer && !(state && state.running) && !isStarting());
+    if (spotsBefore) flyControls(spotsBefore, controlSpots());
     const dl = $("download-btn"); if (dl) dl.disabled = segs.size === 0;
     document.title = segs.size ? `Higgs Meeting Translator · ${cards.size} card${cards.size === 1 ? "" : "s"}` : "Higgs Meeting Translator";
   }
