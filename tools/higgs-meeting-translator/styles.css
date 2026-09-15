@@ -213,7 +213,7 @@ details[open] .chev { transform: rotate(45deg); }
   background: transparent; color: var(--gray-700); cursor: pointer; box-shadow: -1px 0 0 var(--ga-400); transition: background 150ms ease-in-out, color 150ms ease-in-out; }
 .cb-arrow:hover, .cb-arrow[aria-expanded="true"] { background: var(--ga-200); color: var(--gray-1000); }
 .cb-arrow:focus-visible { outline: none; box-shadow: var(--focus-ring); z-index: 1; }
-.menu { position: absolute; left: 0; bottom: calc(100% + 8px); min-width: 240px; max-width: 360px; padding: 6px; border-radius: 12px; background: var(--bg-100); box-shadow: var(--shadow-menu);
+.menu { position: absolute; z-index: 30; left: 0; bottom: calc(100% + 8px); min-width: 240px; max-width: 360px; padding: 6px; border-radius: 12px; background: var(--bg-100); box-shadow: var(--shadow-menu);
   animation: pop 200ms cubic-bezier(.175,.885,.32,1.1); transform-origin: bottom left; }
 @keyframes pop { from { opacity: 0; transform: scale(.96); } }
 .menu-title { padding: 6px 8px 4px; font-size: 12px; line-height: 16px; color: var(--gray-900); }
@@ -393,6 +393,12 @@ input[type=number]:hover::-webkit-inner-spin-button, input[type=number]:focus::-
   .cb-arrow { width: 36px; }
   .cb-btn { width: 44px; }
   .cb-new { left: calc(100% + 8px); top: 6px; width: 44px; padding: 0; }
+  .note { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 8px; padding: 10px 6px 10px 14px; }
+  .note strong { grid-column: 1; white-space: normal; }
+  .note .dismiss { grid-column: 2; grid-row: 1; margin-left: 0; }
+  .note > span { grid-column: 1 / -1; }
+  .note .btn:not(.dismiss) { grid-column: 1 / -1; justify-self: start; margin-top: 4px; }
+  .ob-action .ghost { display: none; }
   .cb-new .long { display: none; } .cb-new .short { display: block; }
   .translation-only .line.tr, .translation-only .refined { padding-left: 0; box-shadow: none; }
 }
@@ -451,6 +457,7 @@ input[type=number]:hover::-webkit-inner-spin-button, input[type=number]:focus::-
 .empty .rest-hint { max-width: none; min-height: 36px; margin-top: -4px; text-align: center; visibility: hidden; }
 .empty .rest-hint.show { visibility: visible; }
 .ghost { visibility: hidden; }
+.ob-action .ghost { order: -1; }
 .cb-new { position: absolute; left: calc(100% + 12px); top: 8px; height: 40px; padding: 0 14px; white-space: nowrap; box-shadow: var(--shadow-menu); }
 .cb-new:hover { box-shadow: var(--shadow-menu); }
 .empty .btn.btn-start.rest-start.running { box-shadow: 0 0 0 1px var(--ga-400); }
