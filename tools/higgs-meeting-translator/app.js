@@ -189,7 +189,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
   async function armSystemShare() {
     if (!sysAudioOk()) { lastShareFailure = "noaudio"; return false; }
     if (!cap || !cap.isActive("system")) {
-      if (!(await shareGuide())) { lastShareFailure = "cancelled"; setNote("share", "warning", "Screen share cancelled", "Computer audio comes through screen sharing. Share a window or screen and include its audio.", { label: "Share screen", run: shareScreen }); return false; }
+      if (!(await shareGuide())) { lastShareFailure = "aborted"; return false; }   // Cancel on the guide: nothing changes, no alert
       try {
         const ok = await cap.startSystem();
         if (!ok) { lastShareFailure = "noaudio"; setNote("share", "warning", "No audio detected in screen sharing", "Share again and make sure audio is included in your browser's sharing options.", { label: "Try again", run: shareScreen }); return false; }
@@ -831,7 +831,7 @@ import { keyStore, sessionStore, prefs, toMarkdown, toJSONL, download } from "./
     if (state.enabled.system && cap) {
       if (!(await armSystemShare())) {
         // A share without audio keeps Computer audio on (the note offers Try again) and does not start.
-        if (lastShareFailure === "noaudio") { starting = 0; updateEmpty(); renderCbNew(); return; }
+        if (lastShareFailure === "noaudio" || lastShareFailure === "aborted") { starting = 0; updateEmpty(); renderCbNew(); return; }
         send({ type: "config", enabled: { system: false } });
         if (!state.enabled.mic) { starting = 0; updateEmpty(); renderCbNew(); renderRestHint(true); return; }
       }
